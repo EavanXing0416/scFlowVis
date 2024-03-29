@@ -7,7 +7,10 @@ scFlowVis is an interactive visual analytic tool to facilitate the analysis of s
 To run scFlowVis locally, please follow these steps:
 
 ### 1. Clone the Repository
-
+```
+git clone https://github.com/EavanXing0416/scFlowVis.git
+cd scFlowVis
+```
 ### 2. Set Up a Virtual Environment (Optional, but recommended)
 ```
 python -m venv venv
