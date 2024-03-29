@@ -7,7 +7,7 @@ from scipy.sparse import csr_matrix
 import scanpy as sc
 import json
 import matplotlib
-matplotlib.use('Agg') #设置 matplotlib 使用 'Agg' 后端，这是一个只生成图像文件而不需要显示窗口的后端，因此它可以在任何线程中使用
+matplotlib.use('Agg') #allow matplotlib use 'Agg' backend，only generate fig without openup new window
 import matplotlib.pyplot as plt
 import mpld3
 from mpld3 import plugins 
@@ -429,7 +429,7 @@ def pp_neighbor():
         adata = sc.read_h5ad(filepath)
 
         sc.pp.neighbors(adata,  n_neighbors=n_neighbors, n_pcs=n_pcs, knn=knn, random_state=random_state, method=method, metric=metric)
-        # 保存 PCA 结果为新文件
+        # 
         new_filename = f"neighbor_result_{uuid.uuid4().hex}.h5ad"
         new_filepath = os.path.join(app.config['UPLOAD_FOLDER'], new_filename)
         adata.write(new_filepath)
@@ -517,7 +517,7 @@ def pca():
 
         sc.tl.pca(adata, n_comps=n_components, zero_center=zero_center, svd_solver=svd_solver)
         #print (adata.obsm['X_pca'].shape)
-        # 保存 PCA 结果为新文件
+        # 
         new_filename = f"pca_result_{uuid.uuid4().hex}.h5ad"
         new_filepath = os.path.join(app.config['UPLOAD_FOLDER'], new_filename)
         adata.write(new_filepath)
@@ -570,7 +570,7 @@ def tsne():
         adata = sc.read_h5ad(filepath)
 
         sc.tl.tsne(adata, n_pcs=n_pcs, perplexity=perplexity, learning_rate=learning_rate, random_state=random_state, early_exaggeration=12)
-        # 保存 PCA 结果为新文件
+        # 
         new_filename = f"tsne_result_{uuid.uuid4().hex}.h5ad"
         new_filepath = os.path.join(app.config['UPLOAD_FOLDER'], new_filename)
         adata.write(new_filepath)
@@ -599,7 +599,7 @@ def umap():
         adata = sc.read_h5ad(filepath)
 
         sc.tl.umap(adata, min_dist=0.5, spread=1.0,n_components=n_components, init_pos=init_pos, random_state=random_state)
-        # 保存 PCA 结果为新文件
+        # 
         new_filename = f"umap_result_{uuid.uuid4().hex}.h5ad"
         new_filepath = os.path.join(app.config['UPLOAD_FOLDER'], new_filename)
         adata.write(new_filepath)
@@ -1255,14 +1255,14 @@ def str_to_dict(para_str):
 
 
 #############################################################################################################
-# 读取数据
+# load data
 def load_data():
     genes = pd.read_csv('static/data/genes.tsv', header=None, sep='\t')
     barcodes = pd.read_csv('static/data/barcodes.tsv', header=None, sep='\t')
     matrix = scipy.io.mmread('static/data/matrix.mtx').T.tocsr()
     return genes, barcodes, matrix
-
-# 数据预处理
+'''
+# preprocessing - abandon after discussion
 def preprocess_data(min_genes, min_cells, n_pcs, n_neighbors, leiden_resolution):
     genes, barcodes, matrix = load_data()
     adata = sc.AnnData(matrix)
@@ -1282,8 +1282,9 @@ def preprocess_data(min_genes, min_cells, n_pcs, n_neighbors, leiden_resolution)
     sc.tl.umap(adata)
     sc.tl.leiden(adata, leiden_resolution)
     return adata
-
+'''
 #################### HTML RENDERING ####################
+'''
 @app.route('/')
 def index():
     genes, barcodes, matrix = load_data()
@@ -1294,6 +1295,11 @@ def index():
         'non_zero': matrix.nnz
     }
     return render_template('index.html', data_info=data_info)
+'''
+@app.route('/')
+def index():
+    return render_template('visual-programming-page.html')
+
 
 @app.route('/visual-programming-interface')
 def visual_programming():
@@ -1302,7 +1308,7 @@ def visual_programming():
 @app.route('/output')
 def output():
     return render_template('output.html')
-
+'''
 @app.route('/process', methods=['POST'])
 def process_data():
     params = request.json
@@ -1313,15 +1319,13 @@ def process_data():
     leiden_resolution = float(params.get('leiden_resolution', 0.5))
     
     adata = preprocess_data(min_genes, min_cells, n_pcs, n_neighbors, leiden_resolution)
-    # 降维数据的处理和返回，这里应该根据实际情况来处理，并返回前端可以理解的格式
-    # 这里假设我们返回UMAP的结果
     umap_result = adata.obsm['X_umap']
     clusters = adata.obs['leiden']
     cells = adata.obs.index
     result = {'umap': umap_result.tolist(), 'clusters': clusters.tolist(), 'cells': cells.tolist()}
     print(result)
     return jsonify(result)
-
+'''
 
 if __name__ == '__main__':
     app.run(debug=True)
