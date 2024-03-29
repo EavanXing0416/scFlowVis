@@ -9,7 +9,8 @@ To run scFlowVis locally, please follow these steps:
 ### 1. Clone the Repository
 
 ### 2. Set Up a Virtual Environment (Optional, but recommended)
-```python -m venv venv
+```
+python -m venv venv
 source venv/bin/activate`  # On Windows use `venv\Scripts\activate`
 ```
 ### 3. Install Dependencies
