@@ -1,0 +1,223 @@
+body {
+    font-size: 0.8rem;  /* Reduce the font size */
+}
+
+.container, .row, .list-group-item {
+    padding: 0.1rem;  /* Reduce padding */
+    margin: 0.1rem;   /* Reduce margin */
+}
+
+.container-fluid {
+    padding: 0; /* Remove padding */
+}
+
+.col-1, .col-2, .col-3, .col-4, .col-5, .col-6, .col-7, .col-8, .col-9, .col-10, .col-11, .col-12 {
+    padding: 5px; /* Remove padding */
+}
+
+.card-header, .card-body, .card-footer {
+    padding: 0.1rem;  /* Reduce padding */
+}
+.card-header {
+    background-color: #dfecfb;
+    color: #303438;
+    font-size: 0.7rem;  /* Reduce the font size */
+    font-weight: bold;  /* Bold font */
+    padding: 0;
+}
+.menubtn, .tabbtn{
+    font-size: 0.7rem;  /* Reduce the font size */
+    text-align: left;
+    font-weight: bold;  /* Bold font */
+    color: #303438;
+    padding: 0;
+}
+
+.card-header{
+    display: flex;
+    justify-content: center;
+    background-color: #dfecfb;  /* Darker gray */
+    color: #303438;  /* Lighter gray */
+    font-size: 0.7rem;  /* Reduce the font size */
+    font-weight: bold;  /* Bold font */
+    padding: 0;
+}
+.card-body table {
+    width: 100%;
+    max-width: 100%;
+    overflow-x: auto;
+    display: block;
+    padding: 0.4rem;
+}
+
+th {
+    padding-left: 0.4rem;  /* Reduce padding */
+    padding-right: 0.4rem;
+    margin: 0.2rem;   /* Reduce margin */
+    font-size: 0.7rem;  /* Reduce the font size */
+    font-style: italic;  /* Italic font */
+    color: #303438;
+    text-align: center;
+}
+td {
+    padding-left: 0.4rem;  /* Reduce padding */
+    padding-right: 0.4rem;
+    margin: 0.2rem;   /* Reduce margin */
+    font-size: 0.7rem;  /* Reduce the font size */
+    font-style: italic;  /* Italic font */
+    color: #303438;
+    text-align: left;
+}
+td:last-child {
+    text-align: center;
+}
+
+#methods-list {
+    padding-bottom: 0.3rem;
+}
+
+.mdgroup{
+    background-color: #dfecfb;  /* Darker gray */
+    color: #303438;  /* Lighter gray */
+    text-align: center;
+    font-size: 0.7rem;  /* Reduce the font size */
+    font-weight: bold;  /* Bold font */
+}
+
+.mdcollapse{
+    background-color: #dfecfb;  /* Darker gray */
+    color: #303438;  /* Lighter gray */
+    font-size: 0.7rem;  /* Reduce the font size */
+    font-style: italic;  /* Italic font */
+    line-height: 0.9rem;
+}
+/*
+.canvas-container {
+    position: relative;
+    flex-grow: 1;
+}
+*/
+#mycanvas {
+    background-color: white;
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    border: 1px solid;
+}
+
+.tooltip {
+    position: absolute;
+    text-align: center;
+    padding: 2px;
+    font: 11px sans-serif;
+    background: lightsteelblue;
+    border: 0px;
+    border-radius: 4px;
+    pointer-events: none;
+}
+
+.icon-btn {
+    width: 60px; 
+    height: 60px; 
+    display: flex; /* Use flexbox to center the content */
+    justify-content: bottom; /* Center the content horizontally */
+    align-items: center; /* Center the content vertically */
+    flex-direction: column; /* Stack the content vertically */
+    margin: 0.15rem;
+    padding: 0.15rem;
+    background-color: #dfecfb;
+}
+
+.icon-btn img {
+    width: 42px; /* Set the width of the icon */
+    height: 42px; /* Set the height of the icon */
+}
+
+.icon-btn span {
+    font-size: 0.6rem; /* Reduce the font size */
+    font-weight: bold; /* Bold font */
+    color: #303438;
+}
+
+.rightbar-btn{
+    width: 50px;
+    margin: 0.1rem;
+    padding: 0.1rem;
+    font-size: 0.7rem;
+    font-weight: bold;
+    color: #303438;
+    background-color: rgba(100, 148, 237, 0.863);
+}
+
+/*adata-btn*/
+#checkBtnContainer {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+.adata-btn{
+    margin: 0.2rem 0.2rem 0.6rem 0.2rem;
+    padding: 0.4rem 0.8rem 0.4rem 0.8rem;
+    font-size: 0.7rem;
+    font-weight: bold;
+    color: #303438;
+    background-color: rgba(100, 148, 237, 0.863);
+}
+
+/*RandomLayoutPanelComponent*/
+#layoutButtons {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    flex-wrap: wrap;
+    align-content: center;
+}
+
+.layout-btn {
+    width: 40px;
+    height: 40px;
+    padding: 0;
+    margin-right: 2px;
+    margin-bottom: 2px;
+}
+
+.layout-btn img {
+    width: 100%;
+    height: 100%;
+}
+
+#tabs {
+    display: flex;
+    flex-direction: row;
+}
+
+.myTab {
+    flex-direction: column;
+    width: 8%; /* Adjust as needed */
+}
+
+.nav-link {
+    padding: 0.1rem;  /* Reduce padding */
+    margin: 0.1rem;   /* Reduce margin */
+    font-size: 0.6rem;  /* Reduce the font size */
+    color: #303438;
+}
+
+.myTabContent {
+    flex-grow: 1;
+}
+
+#tab-content-Container{
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    flex-wrap: wrap;
+    align-content: center;
+}
+
+
+.close {
+    font-size: 1.5em; 
+}

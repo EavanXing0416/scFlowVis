@@ -1,0 +1,635 @@
+<!-- visual-programming-page.html -->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Scanpy Data Visualization</title>
+    <!--D3-->
+    <script src="../static/build/d3.v6.min.js"></script>
+    <!--lightgraph package js & css-->
+	<link rel="stylesheet" type="text/css" href="../static/build/litegraph.css">
+	<script type="text/javascript" src="../static/build/litegraph.js"></script>
+    <script src="../static/build/papaparse.min.js"></script>
+    <!--plotly library-->
+    <script src="../static/build/plotly-latest.min.js"></script>
+    <!--bootstrap libaray js,css,Prpper.js,jQuery-->
+    <link rel="stylesheet" href="../static/build/bootstrap.min.css">
+    <script src="../static/build/jquery-3.3.1.slim.min.js"></script>
+    <script src="../static/build/popper.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"></script>
+    <!--script src="../static/build/bootstrap.min.js"></script-->
+    <!--FileSaver-->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/FileSaver.js/2.0.2/FileSaver.min.js"></script>
+
+    <!--mpld3 Library-->
+    <script src="https://mpld3.github.io/js/mpld3.v0.5.10.js"></script>
+    <!--script src="https://mpld3.github.io/js/mpld3.v0.3.js"></script-->
+
+    <!-- My CSS-->
+    <link rel="stylesheet" type="text/css" href="../static/css/style.css">
+</head>
+
+<body style='width:100%; height:100%'>
+    <div class="container-fluid">
+        <div class="row">
+            <div class="col-2">
+                <div id="adataSvgContainer"></div>
+                <div id="checkBtnContainer">
+                    <button type="button" class="adata-btn btn btn-primary" id="adata-check-btn">Data Structure Check</button>
+                </div>
+                <div id="adataDescContainer"></div>
+            </div>
+            <div class="col-8">
+                <div class="list-group list-group-horizontal" id="methods-list">
+                    <a href="https://scanpy.readthedocs.io/en/stable/api.html#"  target="_blank" class="list-group-item list-group-item-action mdgroup"style="width:12%">Methods</a>
+                    <a href="#explore-data" class="list-group-item list-group-item-action mdgroup" data-toggle="collapse">Explore Data</a>
+                    <div class="list-group collapse mdcollapse" id="explore-data">
+                        <a href="#" class="list-group-item list-group-item-action" id="highest_expr_genes">highest_expr_genes</a>
+                        <a href="#" class="list-group-item list-group-item-action" id="highly_variable_genes">highly_variable_genes</a>
+                    </div>
+                    <a href="#preprocessing" class="list-group-item list-group-item-action mdgroup" data-toggle="collapse">Preprocessing</a>
+                    <div class="list-group collapse mdcollapse" id="preprocessing">
+                        <a href="#" class="list-group-item list-group-item-action" id="filter">filter</a>
+                        <a href="#" class="list-group-item list-group-item-action" id="calculate_qc_metrics">calculate_qc_metrics</a>
+                        <a href="#" class="list-group-item list-group-item-action" id="normalize_total">normalize_total</a>
+                        <a href="#" class="list-group-item list-group-item-action" id="log1p">log1p</a>
+                        <a href="#" class="list-group-item list-group-item-action" id="regress_out">regress_out</a>
+                        <a href="#" class="list-group-item list-group-item-action" id="scale">scale</a>
+                        <a href="#" class="list-group-item list-group-item-action" id="neighbors">neighbors</a>                    
+                    </div>
+                    <a href="#dimentionality-reduction" class="list-group-item list-group-item-action mdgroup" data-toggle="collapse">Dimensionality Reduction</a>
+                    <div class="list-group collapse mdcollapse" id="dimentionality-reduction">
+                        <a href="#" class="list-group-item list-group-item-action" id="pca">pca</a>
+                        <a href="#" class="list-group-item list-group-item-action" id="tsne">t-sne</a>
+                        <a href="#" class="list-group-item list-group-item-action" id="umap">umap</a>
+                        <a href="#" class="list-group-item list-group-item-action" id="draw_graph">draw_graph</a>                  
+                    </div>
+                    <a href="#clustering" class="list-group-item list-group-item-action mdgroup" data-toggle="collapse">Clustering</a>
+                    <div class="list-group collapse mdcollapse" id="clustering">
+                        <a href="#" class="list-group-item list-group-item-action" id="leiden">leiden</a>
+                        <a href="#" class="list-group-item list-group-item-action" id="louvain">louvain</a>
+                        <a href="#" class="list-group-item list-group-item-action" id="dendrogram">dendrogram</a>
+                    </div>
+                    <a href="#differential-expression" class="list-group-item list-group-item-action mdgroup" data-toggle="collapse">Differential Expression</a>
+                    <div class="list-group collapse mdcollapse" id="differential-expression">
+                        <a href="#" class="list-group-item list-group-item-action" id="rank_genes_groups">rank_genes_groups</a>
+                        <a href="#" class="list-group-item list-group-item-action" id="filter_rank_genes_groups">filter_rank_genes_groups</a>
+                        <a href="#" class="list-group-item list-group-item-action" id="marker_gene_overlap">marker_gene_overlap</a>
+                    </div>
+                    <a href="#others" class="list-group-item list-group-item-action mdgroup" data-toggle="collapse">Others</a>
+                    <div class="list-group collapse mdcollapse" id="others">
+                        <a href="#" class="list-group-item list-group-item-action" id="score_genes">score_genes</a>
+                        <a href="#" class="list-group-item list-group-item-action" id="score_genes_cell_cycle">score_genes_cell_type</a>
+                        <a href="#" class="list-group-item list-group-item-action" id="diffmap">diffmap</a>
+                        <a href="#" class="list-group-item list-group-item-action" id="dpt">dpt</a>
+                        <a href="#" class="list-group-item list-group-item-action" id="paga">paga</a>
+                    </div>
+                </div>
+                
+                <div class="container" id="flowchart-container" style="height: 250px; overflow: auto; position: relative;">
+                    <canvas id='mycanvas' width='1200' height='250' style='border: 0 px solid; position: absolute; top: 0'></canvas>   
+                </div>
+
+                <div class="container" id="tabs" style="overflow: auto; position: relative;">
+                    <div id="layoutCtrlContainer" style="width: 8%;">
+                        <div id="layoutButtons">
+                            <button type="button" class="btn btn-secondary layout-btn" onclick="changeLayout(1)">
+                                <img src="../static/image/icons/1col.png" alt="1-col">
+                            </button>
+                            <button type="button" class="btn btn-secondary layout-btn" onclick="changeLayout(2)">
+                                <img src="../static/image/icons/2col.png" alt="2-col">
+                            </button>
+                            <button type="button" class="btn btn-secondary layout-btn" onclick="changeLayout(3)">
+                                <img src="../static/image/icons/3col.png" alt="3-col">
+                            </button>
+                            <button type="button" class="btn btn-secondary layout-btn" onclick="changeLayout(4)">
+                                <img src="../static/image/icons/4grid.png" alt="2x2 grid">
+                            </button>
+                        </div>
+                        <div class="accordion" id="myTabAccordion">
+                            <div class="card" id="myTabAccordion1">
+                                <div class="card-header" id="View1">
+                                    <p class="mb-0">
+                                        <button class="btn btn-link tabbtn" type="button" data-toggle="collapse" data-target="#tab-collapse1" aria-expanded="true" aria-controls="tab-collapse1">
+                                            View 1
+                                        </button>
+                                    </p>
+                                </div>
+                                <div id="tab-collapse1" class="collapse show" aria-labelledby="View1" data-parent="#myTabAccordion">
+                                    <div class="card-body">
+                                        <ul class="nav nav-tabs myTab" id="myTab1" role="tablist" style="width: 100%;"></ul>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="card" id="myTabAccordion2">
+                                <div class="card-header" id="View2">
+                                    <p class="mb-0">
+                                        <button class="btn btn-link tabbtn" type="button" data-toggle="collapse" data-target="#tab-collapse2" aria-expanded="true" aria-controls="tab-collapse2">
+                                            View 2
+                                        </button>
+                                    </p>
+                                </div>
+                                <div id="tab-collapse2" class="collapse show" aria-labelledby="View2" data-parent="#myTabAccordion">
+                                    <div class="card-body">
+                                        <ul class="nav nav-tabs myTab" id="myTab2" role="tablist" style="width: 100%;"></ul>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="card" id="myTabAccordion3">
+                                <div class="card-header" id="View3">
+                                    <p class="mb-0">
+                                        <button class="btn btn-link tabbtn" type="button" data-toggle="collapse" data-target="#tab-collapse3" aria-expanded="true" aria-controls="tab-collapse3">
+                                            View 3
+                                        </button>
+                                    </p>
+                                </div>
+                                <div id="tab-collapse3" class="collapse show" aria-labelledby="View3" data-parent="#myTabAccordion">
+                                    <div class="card-body">
+                                        <ul class="nav nav-tabs myTab" id="myTab3" role="tablist" style="width: 100%;"></ul>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="card" id="myTabAccordion4">
+                                <div class="card-header" id="View4">
+                                    <p class="mb-0">
+                                        <button class="btn btn-link tabbtn" type="button" data-toggle="collapse" data-target="#tab-collapse4" aria-expanded="true" aria-controls="tab-collapse4">
+                                            View 4
+                                        </button>
+                                    </p>
+                                </div>
+                                <div id="tab-collapse4" class="collapse show" aria-labelledby="View4" data-parent="#myTabAccordion">
+                                    <div class="card-body">
+                                        <ul class="nav nav-tabs myTab" id="myTab4" role="tablist" style="width: 100%;"></ul>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div id="layoutDisplayContainer" style="width: 92%;">
+                        <div id="notes" class="row">
+                            <div class="col-12">
+                                <!--label for="cell-id-notes">Cells</label-->
+                                <textarea id="cell-id-notes" rows="3" cols="170">Notes</textarea>
+                            </div>
+                            <!--
+                            <div class="col-6">
+                                <textarea id="cell-id-notes" rows="2" cols="80">Cells</textarea>
+                            </div>
+                            <div class="col-6">
+                                <textarea id="gene-id-notes" rows="2" cols="80">Genes</textarea>
+                            </div>
+                            -->
+                        </div>
+                        <div id="loading-message"></div>                       
+                        <div id="tab-content-Container">    
+                            <div class="tab-content myTabContent" id="myTabContent1"></div>
+                            <div class="tab-content myTabContent" id="myTabContent2"></div>
+                            <div class="tab-content myTabContent" id="myTabContent3"></div>
+                            <div class="tab-content myTabContent" id="myTabContent4"></div>
+                        </div>
+                    </div>
+                </div>
+                <div class="container" id="randomlayout"></div>
+            </div>
+            <div class="col-2">
+                <div class="container" style="padding-top:0">
+                    <div class="row">
+                        <div class="col-12 d-flex" style="padding: 0;">
+                            <button type="button" class="rightbar-btn btn btn-primary" id="save-workflow">Save</button>
+                            <button type="button" class="rightbar-btn btn btn-primary" id="clear-workflow">Clear</button>
+                            <button type="button" class="rightbar-btn btn btn-primary" id="export-wholepage">Export</button>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-12 d-flex flex-wrap" style="padding-left: 0;">
+                            <button type="button" class="icon-btn btn btn-secondary" id="rec-bar" onclick="">
+                                <img src="../static/image/icons/bar.png" alt="bar-chart" id="img-bar">
+                                <span>Bar</span>
+                            </button>
+                            <button type="button" class="icon-btn btn btn-secondary" id="rec-line" onclick="">
+                                <img src="../static/image/icons/line.png" alt="line-chart" id="img-line">
+                                <span>Line</span>
+                            </button>   
+                            <button type="button" class="icon-btn btn btn-secondary" id="rec-scatter" onclick="">
+                                <img src="../static/image/icons/scatter.png" alt="scatter-plot" id="img-scatter">
+                                <span>Scatter</span>
+                            </button>  
+                            <button type="button" class="icon-btn btn btn-secondary" id="rec-bubble" onclick="">
+                                <img src="../static/image/icons/bubble.png" alt="bubble-plot" id="img-bubble">
+                                <span>Bubble</span>
+                            </button>
+                            <button type="button" class="icon-btn btn btn-secondary" id="rec-donut" onclick="">
+                                <img src="../static/image/icons/donut.png" alt="donut-chart" id="img-donut">
+                                <span>Donut</span>
+                            </button>             
+                            <button type="button" class="icon-btn btn btn-secondary" id="rec-pie" onclick="">
+                                <img src="../static/image/icons/pie.png" alt="pie-chart" id="img-pie">
+                                <span>Pie</span>
+                            </button>  
+                            <button type="button" class="icon-btn btn btn-secondary" id="rec-box" onclick="">
+                                <img src="../static/image/icons/box-plot.png" alt="box-plot" id="img-box">
+                                <span>Box</span>
+                            </button>  
+                            <button type="button" class="icon-btn btn btn-secondary" id="rec-violin" onclick="">
+                                <img src="../static/image/icons/violin.png" alt="violin-plot" id="img-violin">
+                                <span>Violin</span>
+                            </button>  
+                            <button type="button" class="icon-btn btn btn-secondary" id="rec-histogram" onclick="">
+                                <img src="../static/image/icons/histogram.png" alt="histogram" id="img-histogram">
+                                <span>Histogram</span>
+                            </button>
+                            <button type="button" class="icon-btn btn btn-secondary" id="rec-density" onclick="">
+                                <img src="../static/image/icons/density.png" alt="density-plot" id="img-density">
+                                <span>Density</span>
+                            </button>
+                            <button type="button" class="icon-btn btn btn-secondary" id="rec-heatmap"  onclick="">
+                                <img src="../static/image/icons/heatmap.png" alt="heatmap" id="img-heatmap">
+                                <span>Heatmap</span>
+                            </button>
+                            <button type="button" class="icon-btn btn btn-secondary" id="rec-network" onclick="">
+                                <img src="../static/image/icons/network.png" alt="network" id="img-network">
+                                <span>Network</span>
+                            </button>                 
+                            <button type="button" class="icon-btn btn btn-secondary" id="rec-sankey" onclick="">
+                                <img src="../static/image/icons/sankey.png" alt="sankey" id="img-sankey">
+                                <span>Sankey</span>
+                            </button>
+                            <button type="button" class="icon-btn btn btn-secondary" id="rec-scatter3d" onclick="">
+                                <img src="../static/image/icons/scatter3d.png" alt="scatter3d" id="img-scatter3d">
+                                <span>3D Sactter</span>
+                            </button>
+                            <button type="button" class="icon-btn btn btn-secondary" id="rec-treemap" onclick="">
+                                <img src="../static/image/icons/treemap.png" alt="treemap" id="img-treemap">
+                                <span>Treemap</span>
+                            </button>
+                            <!--button type="button" class="icon-btn btn btn-secondary" id="rec-wordcloud" onclick="">
+                                <img src="../static/image/icons/wordcloud.png" alt="wordcloud">
+                                <span>Word Cloud</span>
+                            </button-->
+                            <button type="button" class="icon-btn btn btn-secondary" id="rec-parallel" onclick="">
+                                <img src="../static/image/icons/parallel.png" alt="parallel" id="img-parallel">
+                                <span>Parallel</span>
+                            </button>
+
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="list-group list-group" id="sc-pl-list" style="width: 100%;">
+                            <a href="#generic-vis" class="list-group-item list-group-item-action mdgroup" data-toggle="collapse">Generic Visualization</a>
+                            <div class="list-group collapse mdcollapse" id="generic-vis">
+                                <a href="#" class="list-group-item list-group-item-action" id="scatter">scatter</a>
+                                <a href="#" class="list-group-item list-group-item-action" id="heatmap">heatmap</a>
+                                <a href="#" class="list-group-item list-group-item-action" id="dotplot">dotplot</a>
+                                <a href="#" class="list-group-item list-group-item-action" id="matrixplot">matrixplot</a>
+                                <a href="#" class="list-group-item list-group-item-action" id="violin">violin</a>
+                                <a href="#" class="list-group-item list-group-item-action" id="stacked_violin">stacked_violin</a>
+                                <!--a href="#" class="list-group-item list-group-item-action" id="tracksplot">tracksplot</a-->
+                                <a href="#" class="list-group-item list-group-item-action" id="clustermap">clustermap</a>
+                                <a href="#" class="list-group-item list-group-item-action" id="ranking">ranking</a>
+                                <a href="#" class="list-group-item list-group-item-action" id="dendrogram-vis">dendrogram</a>
+                            </div>
+                            <a href="#explore-vis" class="list-group-item list-group-item-action mdgroup" data-toggle="collapse">Explore Data</a>
+                            <div class="list-group collapse mdcollapse" id="explore-vis">
+                                <a href="#" class="list-group-item list-group-item-action" id="highest_expr_genes-vis">highest_expr_genes</a>
+                                <a href="#" class="list-group-item list-group-item-action" id="filter_genes_dispersion">filter_genes_dispersion</a>
+                                <a href="#" class="list-group-item list-group-item-action" id="highly_variable_genes-vis">highly_variable_genes</a>
+                                <a href="#" class="list-group-item list-group-item-action" id="vis_qc_metrics">vis_qc_metrics</a><!--NOT from scanpy-->               
+                            </div>
+                            <a href="#dimentionality-reduction-vis" class="list-group-item list-group-item-action mdgroup" data-toggle="collapse">Dimensionality Reduction</a>
+                            <div class="list-group collapse mdcollapse" id="dimentionality-reduction-vis">
+                                <a href="#" class="list-group-item list-group-item-action" id="pca-vis">pca</a>
+                                <a href="#" class="list-group-item list-group-item-action" id="pca_loadings">pca_loadings</a>
+                                <a href="#" class="list-group-item list-group-item-action" id="pca_variance_ratio">pca_variance_ratio</a>
+                                <a href="#" class="list-group-item list-group-item-action" id="pca_overview">pca_overview</a>
+               
+                            </div>
+                            <a href="#clustering-vis" class="list-group-item list-group-item-action mdgroup" data-toggle="collapse">Clustering</a>
+                            <div class="list-group collapse mdcollapse" id="clustering-vis">
+                                <a href="#" class="list-group-item list-group-item-action" id="tsne-vis">t-sne</a>
+                                <a href="#" class="list-group-item list-group-item-action" id="umap-vis">umap</a>  
+                                <a href="#" class="list-group-item list-group-item-action" id="spatial">spatial</a>
+                                <a href="#" class="list-group-item list-group-item-action" id="embedding">embedding</a>
+                            </div>
+                            <a href="#differential-expression-vis" class="list-group-item list-group-item-action mdgroup" data-toggle="collapse">Differential Expression</a>
+                            <div class="list-group collapse mdcollapse" id="differential-expression-vis">
+                                <a href="#" class="list-group-item list-group-item-action" id="rank_genes_groups-vis">rank_genes_groups</a>
+                                <a href="#" class="list-group-item list-group-item-action" id="genes_groups_violin">genes_groups_violin</a>
+                                <a href="#" class="list-group-item list-group-item-action" id="genes_groups_stacked_violin">genes_groups_stacked_violin</a>
+                                <a href="#" class="list-group-item list-group-item-action" id="genes_groups_heatmap">genes_groups_heatmap</a>
+                                <a href="#" class="list-group-item list-group-item-action" id="genes_groups_dotplot">genes_groups_dotplot</a>
+                                <a href="#" class="list-group-item list-group-item-action" id="genes_groups_matrixplot">genes_groups_matrixplot</a>
+                                <a href="#" class="list-group-item list-group-item-action" id="genes_groups_tracksplot">genes_groups_tracksplot</a>
+                            </div>
+                            <a href="#others-vis" class="list-group-item list-group-item-action mdgroup" data-toggle="collapse">Others</a>
+                            <div class="list-group collapse mdcollapse" id="others-vis">
+                                <a href="#" class="list-group-item list-group-item-action" id="diffmap-vis">diffmap</a>
+                                <a href="#" class="list-group-item list-group-item-action" id="draw_graph-vis">draw_graph</a>
+                                <a href="#" class="list-group-item list-group-item-action" id="paga-vis">paga</a>
+                                <a href="#" class="list-group-item list-group-item-action" id="paga_compare">paga_compare</a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+        </div>
+    </div>
+
+<script>
+    // LiteGraph
+    // Initialize LiteGraph
+    var graph = new LiteGraph.LGraph();
+    var canvas = new LiteGraph.LGraphCanvas("#mycanvas", graph);
+    graph.start();
+
+    // Add Vis Recommendation Nodes to the graph
+    var VisRecommendationNodes = ["rec-bar", "rec-line","rec-scatter", "rec-bubble", "rec-donut","rec-pie", "rec-box", "rec-violin", "rec-histogram","rec-density","rec-heatmap","rec-network", "rec-sankey","rec-scatter3d","rec-treemap","rec-parallel"];
+    for (var i = 0; i < VisRecommendationNodes.length; i++) {
+        try{    
+            var vrmethod = VisRecommendationNodes[i];
+            document.getElementById(vrmethod).addEventListener('click', function(event) {
+                event.preventDefault();  // Prevent the link from being followed
+                console.log(event.target.id);
+                if (event.target.id === "rec-scatter" || event.target.id === "rec-bubble" || event.target.id === "rec-scatter3d" || event.target.id === "img-scatter" || event.target.id === "img-bubble" || event.target.id === "img-scatter3d") {
+                    var node = LiteGraph.createNode("scanpy/vis/vr-scatter");  // Create a node
+                    var chart_type = event.target.id.substring(4)
+                    console.log(chart_type);
+                    node.title = "vis_"+ chart_type;
+                    node.properties.chart = chart_type;
+                    node.addWidget("text", "x", node.properties.x, (value) => {
+                        node.properties.x = value;
+                        node.onWidgetValueChanged("x", value);
+                    });
+                    node.addWidget("text", "y", node.properties.y, (value) => {
+                        node.properties.y = value;
+                        node.onWidgetValueChanged("y", value);
+                    });
+                    
+                    console.log('chart:', node.properties.chart);
+                    if(node.properties.chart === "scatter3d") {
+                        node.addWidget("text", "z", node.properties.z, (value) => {
+                            node.properties.z = value;
+                            node.onWidgetValueChanged("z", value);
+                        });
+                    }
+                    if (node.properties.chart === "bubble" || node.properties.chart == "scatter3d") {
+                        node.addWidget("text", "size", node.properties.size, (value) => {
+                            node.properties.size = value;
+                            node.onWidgetValueChanged("size", value);
+                        });
+                    }
+                
+                    node.addWidget("text", "color", node.properties.color, (value) => {
+                        node.properties.color = value;
+                        node.onWidgetValueChanged("color", value);
+                    });
+                    node.addWidget("text", "label", node.properties.label, (value) => {
+                        node.properties.label = value;
+                        node.onWidgetValueChanged("label", value);
+                    });
+                    
+                    graph.add(node);
+                } 
+                else {    
+                    var node = LiteGraph.createNode("scanpy/vis/recommend")//+event.target.id);  // Create a node
+                    //console.log(node);
+                    //console.log(event);
+                    var chart_type = event.target.id.substring(4)
+                    console.log(chart_type);
+                    node.title = "vis_"+ chart_type;
+                    node.properties.chart = chart_type;
+                    graph.add(node);
+                }                  
+            });
+        } catch (error) {
+            console.error('Error creating or adding node: ', error);
+        }
+    }
+
+    
+    //Link adara check Node with node
+    document.getElementById("adata-check-btn").addEventListener('click', function(event) {
+        event.preventDefault();  // Prevent the link from being followed
+        var node = LiteGraph.createNode("scanpy/data/status");  // Create a node
+        graph.add(node);                
+    });
+    
+    
+    // Initialize the methods list
+    var methods = ["highest_expr_genes", "filter_genes_dispersion", "highly_variable_genes", "filter", "calculate_qc_metrics", "normalize_total", "log1p", "regress_out", "scale", "neighbors", "pca", "tsne", "umap", "draw_graph", "leiden", "louvain", "dendrogram", "rank_genes_groups", "filter_rank_genes_groups", "marker_gene_overlap", "score_genes", "score_genes_cell_cycle", "diffmap", "dpt", "paga"];
+    //var methods_list = document.getElementById("methods-list");
+    for (var i = 0; i < methods.length; i++) {
+        try{    
+            var method = methods[i];
+            document.getElementById(method).addEventListener('click', function(event) {
+                event.preventDefault();  // Prevent the link from being followed
+                console.log(event.target.id);
+                console.log(method)
+                console.log(event.target.id == "highest_expr_genes")
+                if (event.target.id == "highest_expr_genes"){
+                    var node = LiteGraph.createNode("scanpy/vis/highest_expr_genes");  // Create a node
+                    console.log(node);
+                    graph.add(node);
+                    return;
+                }
+                else{
+                    var node = LiteGraph.createNode("scanpy/methods/"+event.target.id);  // Create a node
+                    graph.add(node);                
+                }
+        
+            });
+        } catch (error) {
+            console.error('Error creating or adding node: ', error);
+        }
+    }
+
+    // Initialize the visualization list
+    var vis_methods = ["scatter", "heatmap", "dotplot", "matrixplot", "stacked_violin", "violin", "clustermap", "ranking", "dendrogram-vis", "highest_expr_genes-vis", "filter_genes_dispersion", "highly_variable_genes-vis", "vis_qc_metrics", "pca-vis", "pca_loadings", "pca_variance_ratio", "pca_overview", "tsne-vis", "umap-vis", "spatial", "embedding", "rank_genes_groups-vis", "genes_groups_violin", "genes_groups_stacked_violin", "genes_groups_heatmap", "genes_groups_dotplot", "genes_groups_matrixplot", "genes_groups_tracksplot", "diffmap-vis", "draw_graph-vis", "paga-vis", "paga_compare"];
+    for (var i = 0; i < vis_methods.length; i++) {
+        var method = vis_methods[i];
+        try{                
+            document.getElementById(method).addEventListener('click', function(event) {
+                event.preventDefault();  // Prevent the link from being followed
+                
+                if (event.target.id == "vis_qc_metrics"){
+                    var node = LiteGraph.createNode("scanpy/vis/qc");  // Create a node
+                    graph.add(node);
+                    return;
+                }
+                else{
+                    var node = LiteGraph.createNode("scanpy/vis-methods");  // Create a node
+                    if (node === null) {
+                        console.error('Error creating node: scanpy/vis-methods');
+                        return;
+                    }
+                    //console.log(node);
+                    node.title = "sc_pl_"+event.target.textContent;
+                    //node.properties = {filename:"", plot_method:event.target.textContent, parameters:""}
+                    node.properties.plot_method = event.target.textContent;
+                    node.widgets[0].value = event.target.textContent;
+                    graph.add(node); 
+                }               
+            });
+        } catch (error) {
+            console.error('Error creating or adding node: ', error);
+        }
+    }
+     //Add tooltip to the vis-methods
+    var vis_methods_desc = [{"scatter": "scatter(adata, x=None, y=None, *, color=None, use_raw=None, layers=None, sort_order=True, alpha=None, basis=None, groups=None, components=None, projection='2d', legend_loc='right margin', legend_fontsize=None, legend_fontweight=None, legend_fontoutline=None, color_map=None, palette=None, frameon=None, right_margin=None, left_margin=None, size=None, marker='.', title=None, show=None, save=None, ax=None)"}, 
+                            {"heatmap": "heatmap(adata, var_names, groupby, *, use_raw=None, log=False, num_categories=7, dendrogram=False, gene_symbols=None, var_group_positions=None, var_group_labels=None, var_group_rotation=None, layer=None, standard_scale=None, swap_axes=False, show_gene_labels=None, show=None, save=None, figsize=None, vmin=None, vmax=None, vcenter=None, norm=None, **kwds)"},
+                            {"dotplot": "dotplot(adata, var_names, groupby, *, use_raw=None, log=False, num_categories=7, expression_cutoff=0.0, mean_only_expressed=False, cmap='Reds', dot_max=None, dot_min=None, standard_scale=None, smallest_dot=0.0, title=None, colorbar_title='Mean expression\\nin group', size_title='Fraction of cells\\nin group (%)', figsize=None, dendrogram=False, gene_symbols=None, var_group_positions=None, var_group_labels=None, var_group_rotation=None, layer=None, swap_axes=False, dot_color_df=None, show=None, save=None, ax=None, return_fig=False, vmin=None, vmax=None, vcenter=None, norm=None, **kwds)"}, 
+                            {"matrixplot": "matrixplot(adata, var_names, groupby, *, use_raw=None, log=False, num_categories=7, figsize=None, dendrogram=False, title=None, cmap='viridis', colorbar_title='Mean expression\\nin group', gene_symbols=None, var_group_positions=None, var_group_labels=None, var_group_rotation=None, layer=None, standard_scale=None, values_df=None, swap_axes=False, show=None, save=None, ax=None, return_fig=False, vmin=None, vmax=None, vcenter=None, norm=None, **kwds)"}, 
+                            {"stacked_violin": "stacked_violin(adata, var_names, groupby, *, use_raw=None, log=False, num_categories=7, categories_order=None, title=None, figsize=None, gene_symbols=None, var_group_positions=None, var_group_labels=None, var_group_rotation=None, layer=None, standard_scale=None, ax=None, vmin=None, vmax=None, vcenter=None, norm=None, **kwds)"}, 
+                            {"violin": "violin(adata, keys, groupby=None, *, log=False, use_raw=None, stripplot=True, jitter=True, size=1, layer=None, scale='width', order=None, multi_panel=None, xlabel='', ylabel=None, rotation=None, show=None, save=None, ax=None, **kwds)"}, 
+                            {"clustermap": "clustermap(adata, obs_keys=None, *, use_raw=None, show=None, save=None, **kwds)"}, 
+                            {"ranking": "ranking(adata, attr, keys, *, dictionary=None, indices=None, labels=None, color='black', n_points=30, log=False, include_lowest=False, show=None)"}, 
+                            {"dendrogram-vis": "dendrogram(adata, groupby, *, dendrogram_key=None, orientation='top', remove_labels=False, show=None, save=None, ax=None)"}, 
+                            {"highest_expr_genes-vis": "(adata, n_top=30, show=None, save=None, ax=None, gene_symbols=None, log=False, **kwds)"},
+                            {"filter_genes_dispersion": "(result, log=False, show=None, save=None)"},
+                            {"highly_variable_genes-vis": "(adata_or_result, log=False, show=None, save=None, highly_variable_genes=True)"},
+                            {"pca-vis": "pca(adata, *, color=None, mask_obs=None, gene_symbols=None, use_raw=None, sort_order=True, edges=False, edges_width=0.1, edges_color='grey', neighbors_key=None, arrows=False, arrows_kwds=None, groups=None, components=None, dimensions=None, layer=None, projection='2d', scale_factor=None, color_map=None, cmap=None, palette=None, na_color='lightgray', na_in_legend=True, size=None, frameon=None, legend_fontsize=None, legend_fontweight='bold', legend_loc='right margin', legend_fontoutline=None, colorbar_loc='right', vmax=None, vmin=None, vcenter=None, norm=None, add_outline=False, outline_width=(0.3, 0.05), outline_color=('black', 'white'), ncols=4, hspace=0.25, wspace=None, title=None, show=None, save=None, ax=None, return_fig=None, marker='.', annotate_var_explained=False, **kwargs)"}, 
+                            {"pca_loadings": "pca_loadings(adata, components=None, *, include_lowest=True, n_points=None, show=None, save=None)"}, 
+                            {"pca_variance_ratio": "pca_variance_ratio(adata, n_pcs=30, *, log=False, show=None, save=None)"}, 
+                            {"pca_overview": "pca_overview(adata, **params)"}, 
+                            {"tsne-vis": "tsne(adata, *, color=None, mask_obs=None, gene_symbols=None, use_raw=None, sort_order=True, edges=False, edges_width=0.1, edges_color='grey', neighbors_key=None, arrows=False, arrows_kwds=None, groups=None, components=None, dimensions=None, layer=None, projection='2d', scale_factor=None, color_map=None, cmap=None, palette=None, na_color='lightgray', na_in_legend=True, size=None, frameon=None, legend_fontsize=None, legend_fontweight='bold', legend_loc='right margin', legend_fontoutline=None, colorbar_loc='right', vmax=None, vmin=None, vcenter=None, norm=None, add_outline=False, outline_width=(0.3, 0.05), outline_color=('black', 'white'), ncols=4, hspace=0.25, wspace=None, title=None, show=None, save=None, ax=None, return_fig=None, marker='.', **kwargs)"}, 
+                            {"umap-vis": "umap(adata, *, color=None, mask_obs=None, gene_symbols=None, use_raw=None, sort_order=True, edges=False, edges_width=0.1, edges_color='grey', neighbors_key=None, arrows=False, arrows_kwds=None, groups=None, components=None, dimensions=None, layer=None, projection='2d', scale_factor=None, color_map=None, cmap=None, palette=None, na_color='lightgray', na_in_legend=True, size=None, frameon=None, legend_fontsize=None, legend_fontweight='bold', legend_loc='right margin', legend_fontoutline=None, colorbar_loc='right', vmax=None, vmin=None, vcenter=None, norm=None, add_outline=False, outline_width=(0.3, 0.05), outline_color=('black', 'white'), ncols=4, hspace=0.25, wspace=None, title=None, show=None, save=None, ax=None, return_fig=None, marker='.', **kwargs)"}, 
+                            {"spatial": "spatial(adata, *, color=None, mask_obs=None, gene_symbols=None, use_raw=None, sort_order=True, edges=False, edges_width=0.1, edges_color='grey', neighbors_key=None, arrows=False, arrows_kwds=None, groups=None, components=None, dimensions=None, layer=None, projection='2d', scale_factor=None, color_map=None, cmap=None, palette=None, na_color=None, na_in_legend=True, size=1.0, frameon=None, legend_fontsize=None, legend_fontweight='bold', legend_loc='right margin', legend_fontoutline=None, colorbar_loc='right', vmax=None, vmin=None, vcenter=None, norm=None, add_outline=False, outline_width=(0.3, 0.05), outline_color=('black', 'white'), ncols=4, hspace=0.25, wspace=None, title=None, show=None, save=None, ax=None, return_fig=None, marker='.', basis='spatial', img=None, img_key=Empty.token, library_id=Empty.token, crop_coord=None, alpha_img=1.0, bw=False, spot_size=None, **kwargs)"}, 
+                            {"embedding": "embedding(adata, basis, *, color=None, mask_obs=None, gene_symbols=None, use_raw=None, sort_order=True, edges=False, edges_width=0.1, edges_color='grey', neighbors_key=None, arrows=False, arrows_kwds=None, groups=None, components=None, dimensions=None, layer=None, projection='2d', scale_factor=None, color_map=None, cmap=None, palette=None, na_color='lightgray', na_in_legend=True, size=None, frameon=None, legend_fontsize=None, legend_fontweight='bold', legend_loc='right margin', legend_fontoutline=None, colorbar_loc='right', vmax=None, vmin=None, vcenter=None, norm=None, add_outline=False, outline_width=(0.3, 0.05), outline_color=('black', 'white'), ncols=4, hspace=0.25, wspace=None, title=None, show=None, save=None, ax=None, return_fig=None, marker='.', **kwargs)"}, 
+                            {"rank_genes_groups-vis": "rank_genes_groups(adata, groups=None, *, n_genes=20, gene_symbols=None, key='rank_genes_groups', fontsize=8, ncols=4, sharey=True, show=None, save=None, ax=None, **kwds)"}, 
+                            {"genes_groups_violin": "genes_groups_violin(adata, groups=None, *, n_genes=20, gene_names=None, gene_symbols=None, use_raw=None, key=None, split=True, density_norm='width', strip=True, jitter=True, size=1, ax=None, show=None, save=None, scale=None)"}, 
+                            {"genes_groups_stacked_violin": "genes_groups_stacked_violin(adata, groups=None, *, n_genes=None, groupby=None, gene_symbols=None, var_names=None, min_logfoldchange=None, key=None, show=None, save=None, return_fig=False, **kwds)"}, 
+                            {"genes_groups_heatmap": "genes_groups_heatmap(adata, groups=None, *, n_genes=None, groupby=None, gene_symbols=None, var_names=None, min_logfoldchange=None, key=None, show=None, save=None, **kwds)"}, 
+                            {"genes_groups_dotplot": "genes_groups_dotplot(adata, groups=None, *, n_genes=None, groupby=None, values_to_plot=None, var_names=None, gene_symbols=None, min_logfoldchange=None, key=None, show=None, save=None, return_fig=False, **kwds)"}, 
+                            {"genes_groups_matrixplot": "genes_groups_matrixplot(adata, groups=None, *, n_genes=None, groupby=None, values_to_plot=None, var_names=None, gene_symbols=None, min_logfoldchange=None, key=None, show=None, save=None, return_fig=False, **kwds)"}, 
+                            {"genes_groups_tracksplot": "genes_groups_tracksplot(adata, groups=None, *, n_genes=None, groupby=None, var_names=None, gene_symbols=None, min_logfoldchange=None, key=None, show=None, save=None, **kwds)"}, 
+                            {"diffmap-vis": "diffmap(adata, *, color=None, mask_obs=None, gene_symbols=None, use_raw=None, sort_order=True, edges=False, edges_width=0.1, edges_color='grey', neighbors_key=None, arrows=False, arrows_kwds=None, groups=None, components=None, dimensions=None, layer=None, projection='2d', scale_factor=None, color_map=None, cmap=None, palette=None, na_color='lightgray', na_in_legend=True, size=None, frameon=None, legend_fontsize=None, legend_fontweight='bold', legend_loc='right margin', legend_fontoutline=None, colorbar_loc='right', vmax=None, vmin=None, vcenter=None, norm=None, add_outline=False, outline_width=(0.3, 0.05), outline_color=('black', 'white'), ncols=4, hspace=0.25, wspace=None, title=None, show=None, save=None, ax=None, return_fig=None, marker='.', **kwargs)"}, 
+                            {"draw_graph-vis": "draw_graph(adata, *, color=None, mask_obs=None, gene_symbols=None, use_raw=None, sort_order=True, edges=False, edges_width=0.1, edges_color='grey', neighbors_key=None, arrows=False, arrows_kwds=None, groups=None, components=None, dimensions=None, layer=None, projection='2d', scale_factor=None, color_map=None, cmap=None, palette=None, na_color='lightgray', na_in_legend=True, size=None, frameon=None, legend_fontsize=None, legend_fontweight='bold', legend_loc='right margin', legend_fontoutline=None, colorbar_loc='right', vmax=None, vmin=None, vcenter=None, norm=None, add_outline=False, outline_width=(0.3, 0.05), outline_color=('black', 'white'), ncols=4, hspace=0.25, wspace=None, title=None, show=None, save=None, ax=None, return_fig=None, marker='.', layout=None, **kwargs)"}, 
+                            {"paga-vis": "paga(adata, *, threshold=None, color=None, layout=None, layout_kwds=mappingproxy({}), init_pos=None, root=0, labels=None, single_component=False, solid_edges='connectivities', dashed_edges=None, transitions=None, fontsize=None, fontweight='bold', fontoutline=None, text_kwds=mappingproxy({}), node_size_scale=1.0, node_size_power=0.5, edge_width_scale=1.0, min_edge_width=None, max_edge_width=None, arrowsize=30, title=None, left_margin=0.01, random_state=0, pos=None, normalize_to_color=False, cmap=None, cax=None, colorbar=None, cb_kwds=mappingproxy({}), frameon=None, add_pos=True, export_to_gexf=False, use_raw=True, colors=None, groups=None, plot=True, show=None, save=None, ax=None)"}, 
+                            {"paga_compare": "paga_compare(adata, basis=None, *, edges=False, color=None, alpha=None, groups=None, components=None, projection='2d', legend_loc='on data', legend_fontsize=None, legend_fontweight='bold', legend_fontoutline=None, color_map=None, palette=None, frameon=False, size=None, title=None, right_margin=None, left_margin=0.05, show=None, save=None, title_graph=None, groups_graph=None, pos=None, **paga_graph_params)"}];
+                        
+    // 遍历 vis_methods_desc 数组
+    vis_methods_desc.forEach(function(item) {
+        // 获取对象的 key 和 value
+        var id = Object.keys(item)[0];
+        var tooltip = item[id];
+
+        // 获取对应的 <a> 标签
+        var aTag = document.getElementById(id);
+        if (aTag) {
+            // 添加 data-toggle 和 title 属性
+            aTag.setAttribute('data-toggle', 'tooltip');
+            aTag.setAttribute('title', tooltip);
+        }else{
+            console.log("No such id: ", id);
+        }
+    });
+
+    // 初始化工具提示组件
+    $(function () {
+        $('[data-toggle="tooltip"]').tooltip()
+    });
+
+    //Display Ctrl
+    function changeLayout(layout) {
+        // Get the tab content containers
+        var myTabAccordion1 = document.getElementById('myTabAccordion1');
+        var myTabAccordion2 = document.getElementById('myTabAccordion2');
+        var myTabAccordion3 = document.getElementById('myTabAccordion3');
+        var myTabAccordion4 = document.getElementById('myTabAccordion4');
+        
+        var myTab1 = document.getElementById('myTab1');
+        var myTab2 = document.getElementById('myTab2');
+        var myTab3 = document.getElementById('myTab3');
+        var myTab4 = document.getElementById('myTab4');
+        
+        var myTabContent1 = document.getElementById('myTabContent1');
+        var myTabContent2 = document.getElementById('myTabContent2');
+        var myTabContent3 = document.getElementById('myTabContent3');
+        var myTabContent4 = document.getElementById('myTabContent4');
+
+        // Hide all tab content containers
+        myTabAccordion1.style.display = 'none';
+        myTabAccordion2.style.display = 'none';
+        myTabAccordion3.style.display = 'none';
+        myTabAccordion4.style.display = 'none';
+        
+        myTab1.style.display = 'none';
+        myTab2.style.display = 'none';
+        myTab3.style.display = 'none';
+        myTab4.style.display = 'none';
+
+        myTabContent1.style.display = 'none';
+        myTabContent2.style.display = 'none';
+        myTabContent3.style.display = 'none';
+        myTabContent4.style.display = 'none';
+
+        // Show the selected tab content containers
+        if (layout === 1) {
+            myTabAccordion1.style.display = 'block';
+            myTab1.style.display = 'block';
+            myTabContent1.style.display = 'block';
+        } else if (layout === 2) {
+            myTabAccordion1.style.display = 'block';
+            myTabAccordion2.style.display = 'block';
+            myTab1.style.display = 'block';
+            myTab2.style.display = 'block';
+            myTabContent1.style.display = 'block';
+            myTabContent2.style.display = 'block';
+            myTabContent1.style.width = '50%';
+            myTabContent2.style.width = '50%';
+        } else if (layout === 3) {
+            myTabAccordion1.style.display = 'block';
+            myTabAccordion2.style.display = 'block';
+            myTabAccordion3.style.display = 'block';
+            myTab1.style.display = 'block';
+            myTab2.style.display = 'block';
+            myTab3.style.display = 'block';
+            myTabContent1.style.display = 'block';
+            myTabContent2.style.display = 'block';
+            myTabContent3.style.display = 'block';
+            myTabContent1.style.width = '33%';
+            myTabContent2.style.width = '33%';
+            myTabContent3.style.width = '33%';
+        } else if (layout === 4) {
+            myTabAccordion1.style.display = 'block';
+            myTabAccordion2.style.display = 'block';
+            myTabAccordion3.style.display = 'block';
+            myTabAccordion4.style.display = 'block';
+            myTab1.style.display = 'block';
+            myTab2.style.display = 'block';
+            myTab3.style.display = 'block';
+            myTab4.style.display = 'block';
+            myTabContent1.style.display = 'block';
+            myTabContent2.style.display = 'block';
+            myTabContent3.style.display = 'block';
+            myTabContent4.style.display = 'block';
+            myTabContent1.style.width = '50%';
+            myTabContent2.style.width = '50%';
+            myTabContent3.style.width = '50%';
+            myTabContent4.style.width = '50%';
+        }
+    }
+    window.onload = function() {
+        changeLayout(1);
+    };
+
+
+
+
+</script>
+<script src="../static/js/save.js"></script>
+<script src="../static/js/adata-check.js"></script>
+<script src="../static/js/sc-data-upload.js"></script>
+<script src="../static/js/sc-preprocessing.js"></script>
+<script src="../static/js/sc-dr-pca.js"></script>
+<script src="../static/js/sc-dr-tsne.js"></script>
+<script src="../static/js/sc-dr-umap.js"></script>
+<script src="../static/js/sc-dr-drawgraph.js"></script>
+<script src="../static/js/sc-clustering.js"></script>
+<script src="../static/js/sc-trajectory.js"></script>
+<script src="../static/js/sc-diffexp.js"></script>
+<script src="../static/js/sc-others.js"></script>
+<script src="../static/js/vis-scatter.js"></script>
+<script src="../static/js/sc-pl.js"></script>
+<script src="../static/js/vis-recommendation.js"></script>
+<script src="../static/js/vis-recommendation-scatter.js"></script>
+</body>
+</html>

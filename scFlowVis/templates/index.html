@@ -1,0 +1,97 @@
+<!-- index.html -->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>scVIS</title>
+    <link rel="stylesheet" type="text/css" href="../static/css/style.css">
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <script src="https://d3js.org/d3.v6.min.js"></script>
+    
+    <!--lightgraph package js & css-->
+	<link rel="stylesheet" type="text/css" href="../static/css/litegraph.css">
+	<script type="text/javascript" src="../static/build/litegraph.js"></script>
+</head>
+
+<body>
+    <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+        <a class="navbar-brand" href="#">single cell RNA sequence visual analytics pipeline </a>
+    </nav>
+
+    <div class="container-fluid mt-4">
+        <div class="row">
+            <div class="col-md-3">
+                <div class="card h-100">
+                    <div class="card-body">
+                        <h5 class="card-title">Data Upload</h5>
+                        <!-- data uplead related -->
+                        <div id="data-description">
+                            <div id="data-info"></div>
+                            <div>
+                                <label for="min-genes">Min Genes:</label>
+                                <input type="number" id="min-genes" value="1000">
+                                <label for="min-cells">Min Cells:</label>
+                                <input type="number" id="min-cells" value="5">
+                                <br>
+                                <label for="n_pcs">Number of PCs:</label>
+                                <input type="number" id="n_pcs" value="40">
+                                <label for="n_neighbors">Number of Nearest Neighbours:</label>
+                                <input type="number" id="n_neighbors" value="10">
+                                <label for="leiden_resolution">Leiden Resolution:</label>
+                                <input type="number" id="leiden_resolution" value="0.5">
+                                <br>
+                                <button onclick="processData()">Run Analysis</button>
+                            </div>
+                        </div>
+                    </div>
+               
+                    <div class="card-body">
+                        <h5 class="card-title">Vis List</h5>
+                        <!-- Vis Recommendation -->
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-9">
+                <div class="card h-100">
+                    <div class="card-body">
+                        <h5 class="card-title">Visual Programming</h5>
+                        <div class="canvas-container">
+                            <canvas id="mycanvas"></canvas>
+                        </div>
+                    </div>
+                    <div class="card-body">
+                        <h5 class="card-title">Main View</h5>
+                        <!-- Main View related -->
+                        <div id="scatter-plot"></div>
+                        <div id="selectedCells"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+    <script>
+    // 显示数据信息
+    let dataInfo = {{ data_info | tojson }};
+    document.getElementById('data-info').innerHTML = 
+        `Genes: ${dataInfo.genes_shape[0]}<br>` +
+        `Barcodes: ${dataInfo.barcodes_shape[0]}<br>` +
+        `Matrix: ${dataInfo.matrix_shape}<br>` +
+        `Non-zero elements: ${dataInfo.non_zero}<br>`+
+        `Non-zero rate: ${dataInfo.non_zero/dataInfo.matrix_shape[0]/dataInfo.matrix_shape[1]}`;
+    </script>
+
+
+    <!-- dependences -->
+    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.0.6/dist/umd/popper.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+
+    <script src="../static/js/data-view.js"></script>
+    <script src="../static/js/visual-programming-view.js"></script>
+
+
+</body>
+</html>

@@ -1,0 +1,86 @@
+# -*- coding: utf-8 -*-
+r""" This package implements the Leiden algorithm in ``C++`` and exposes it to
+python.  It relies on ``(python-)igraph`` for it to function. Besides the
+relative flexibility of the implementation, it also scales well, and can be run
+on graphs of millions of nodes (as long as they can fit in memory). Each method
+is represented by a different class, all of whom derive from
+:class:`~leidenalg.VertexPartition.MutableVertexPartition`. In addition,
+multiplex graphs are supported as layers, which also supports multislice
+representations.
+
+Examples
+--------
+
+The simplest example just finds a partition using modularity
+
+  >>> G = ig.Graph.Tree(100, 3)
+  >>> partition = la.find_partition(G, la.ModularityVertexPartition)
+
+Alternatively, one can access the different optimisation routines individually
+and construct partitions oneself. These partitions can then be optimised by
+constructing an :class:`Optimiser` object and running
+:func:`~Optimiser.optimise_partition`.
+
+  >>> G = ig.Graph.Tree(100, 3)
+  >>> partition = la.CPMVertexPartition(G, resolution_parameter = 0.1)
+  >>> optimiser = la.Optimiser()
+  >>> diff = optimiser.optimise_partition(partition)
+
+The :class:`Optimiser` class contains also the different subroutines that are
+used internally by :func:`~Optimiser.optimise_partition`. In addition, through
+the Optimiser class there are various options available for changing some of
+the optimisation procedure which can affect both speed and quality, which are
+not immediately available in :func:`leidenalg.find_partition`.
+"""
+
+
+# start delvewheel patch
+def _delvewheel_init_patch_1_3_8():
+    import ctypes
+    import os
+    import platform
+    import sys
+    libs_dir = os.path.abspath(os.path.join(os.path.dirname(__file__), os.pardir, 'leidenalg.libs'))
+    is_conda_cpython = platform.python_implementation() == 'CPython' and (hasattr(ctypes.pythonapi, 'Anaconda_GetVersion') or 'packaged by conda-forge' in sys.version)
+    if sys.version_info[:2] >= (3, 8) and not is_conda_cpython or sys.version_info[:2] >= (3, 10):
+        if os.path.isdir(libs_dir):
+            os.add_dll_directory(libs_dir)
+    else:
+        load_order_filepath = os.path.join(libs_dir, '.load-order-leidenalg-0.10.1')
+        if os.path.isfile(load_order_filepath):
+            with open(os.path.join(libs_dir, '.load-order-leidenalg-0.10.1')) as file:
+                load_order = file.read().split()
+            for lib in load_order:
+                lib_path = os.path.join(os.path.join(libs_dir, lib))
+                if os.path.isfile(lib_path) and not ctypes.windll.kernel32.LoadLibraryExW(ctypes.c_wchar_p(lib_path), None, 0x00000008):
+                    raise OSError('Error loading {}; {}'.format(lib, ctypes.FormatError()))
+
+
+_delvewheel_init_patch_1_3_8()
+del _delvewheel_init_patch_1_3_8
+# end delvewheel patch
+
+
+from .functions import ALL_COMMS
+from .functions import ALL_NEIGH_COMMS
+from .functions import RAND_COMM
+from .functions import RAND_NEIGH_COMM
+
+from .functions import MOVE_NODES
+from .functions import MERGE_NODES
+
+from .functions import find_partition
+from .functions import find_partition_multiplex
+from .functions import find_partition_temporal
+from .functions import slices_to_layers
+from .functions import time_slices_to_layers
+
+from .Optimiser import Optimiser
+from .VertexPartition import ModularityVertexPartition
+from .VertexPartition import SurpriseVertexPartition
+from .VertexPartition import SignificanceVertexPartition
+from .VertexPartition import RBERVertexPartition
+from .VertexPartition import RBConfigurationVertexPartition
+from .VertexPartition import CPMVertexPartition
+
+from .version import *

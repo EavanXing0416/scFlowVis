@@ -1,0 +1,128 @@
+Metadata-Version: 2.1
+Name: scanpy
+Version: 1.9.6
+Summary: Single-Cell Analysis in Python.
+Project-URL: Documentation, https://scanpy.readthedocs.io/
+Project-URL: Source, https://github.com/scverse/scanpy
+Project-URL: Home-page, https://scanpy.org
+Author: Alex Wolf, Philipp Angerer, Fidel Ramirez, Isaac Virshup, Sergei Rybakov, Gokcen Eraslan, Tom White, Malte Luecken, Davide Cittaro, Tobias Callies, Marius Lange, Andrés R. Muñoz-Rojas
+Maintainer-email: Isaac Virshup <ivirshup@gmail.com>, Philipp Angerer <phil.angerer@gmail.com>, Alex Wolf <f.alex.wolf@gmx.de>
+License-Expression: BSD-3-Clause
+License-File: LICENSE
+Classifier: Development Status :: 5 - Production/Stable
+Classifier: Environment :: Console
+Classifier: Framework :: Jupyter
+Classifier: Intended Audience :: Developers
+Classifier: Intended Audience :: Science/Research
+Classifier: License :: OSI Approved :: BSD License
+Classifier: Natural Language :: English
+Classifier: Operating System :: MacOS :: MacOS X
+Classifier: Operating System :: Microsoft :: Windows
+Classifier: Operating System :: POSIX :: Linux
+Classifier: Programming Language :: Python :: 3
+Classifier: Programming Language :: Python :: 3.8
+Classifier: Programming Language :: Python :: 3.9
+Classifier: Programming Language :: Python :: 3.10
+Classifier: Topic :: Scientific/Engineering :: Bio-Informatics
+Classifier: Topic :: Scientific/Engineering :: Visualization
+Requires-Python: >=3.8
+Requires-Dist: anndata>=0.7.4
+Requires-Dist: get-annotations; python_version < '3.10'
+Requires-Dist: h5py>=3
+Requires-Dist: joblib
+Requires-Dist: matplotlib>=3.4
+Requires-Dist: natsort
+Requires-Dist: networkx>=2.3
+Requires-Dist: numba>=0.41.0
+Requires-Dist: numpy>=1.17.0
+Requires-Dist: packaging
+Requires-Dist: pandas!=2.1.2,>=1.1.1
+Requires-Dist: patsy
+Requires-Dist: scikit-learn>=0.24
+Requires-Dist: scipy>=1.4
+Requires-Dist: seaborn!=0.13.0
+Requires-Dist: session-info
+Requires-Dist: statsmodels>=0.10.0rc2
+Requires-Dist: tqdm
+Requires-Dist: umap-learn>=0.3.10
+Provides-Extra: bbknn
+Requires-Dist: bbknn; extra == 'bbknn'
+Provides-Extra: dask
+Requires-Dist: dask[array]!=2.17.0; extra == 'dask'
+Provides-Extra: dev
+Requires-Dist: black>=20.8b1; extra == 'dev'
+Requires-Dist: docutils; extra == 'dev'
+Requires-Dist: setuptools-scm; extra == 'dev'
+Provides-Extra: doc
+Requires-Dist: matplotlib!=3.6.1; extra == 'doc'
+Requires-Dist: myst-parser; extra == 'doc'
+Requires-Dist: scanpy[paga]; extra == 'doc'
+Requires-Dist: scanpydoc[typehints]<0.8,>=0.7.7; extra == 'doc'
+Requires-Dist: sphinx-rtd-theme>=1.0; extra == 'doc'
+Requires-Dist: sphinx>=4.4; extra == 'doc'
+Provides-Extra: harmony
+Requires-Dist: harmonypy; extra == 'harmony'
+Provides-Extra: leiden
+Requires-Dist: igraph>=0.10; extra == 'leiden'
+Requires-Dist: leidenalg>=0.9; extra == 'leiden'
+Provides-Extra: louvain
+Requires-Dist: igraph; extra == 'louvain'
+Requires-Dist: louvain!=0.6.2,>=0.6; extra == 'louvain'
+Provides-Extra: magic
+Requires-Dist: magic-impute>=2.0; extra == 'magic'
+Provides-Extra: paga
+Requires-Dist: igraph; extra == 'paga'
+Provides-Extra: rapids
+Requires-Dist: cudf>=0.9; extra == 'rapids'
+Requires-Dist: cugraph>=0.9; extra == 'rapids'
+Requires-Dist: cuml>=0.9; extra == 'rapids'
+Provides-Extra: scanorama
+Requires-Dist: scanorama; extra == 'scanorama'
+Provides-Extra: scrublet
+Requires-Dist: scrublet; extra == 'scrublet'
+Provides-Extra: skmisc
+Requires-Dist: scikit-misc>=0.1.3; extra == 'skmisc'
+Provides-Extra: test
+Requires-Dist: scanpy[dask]; extra == 'test'
+Requires-Dist: scanpy[leiden]; extra == 'test'
+Requires-Dist: scanpy[test-min]; extra == 'test'
+Requires-Dist: zarr; extra == 'test'
+Provides-Extra: test-full
+Requires-Dist: scanpy[harmony]; extra == 'test-full'
+Requires-Dist: scanpy[leiden]; extra == 'test-full'
+Requires-Dist: scanpy[magic]; extra == 'test-full'
+Requires-Dist: scanpy[scanorama]; extra == 'test-full'
+Requires-Dist: scanpy[scrublet]; extra == 'test-full'
+Requires-Dist: scanpy[skmisc]; extra == 'test-full'
+Requires-Dist: scanpy[test]; extra == 'test-full'
+Provides-Extra: test-min
+Requires-Dist: profimp; extra == 'test-min'
+Requires-Dist: pytest-nunit; extra == 'test-min'
+Requires-Dist: pytest>=4.4; extra == 'test-min'
+Description-Content-Type: text/markdown
+
+[![Stars](https://img.shields.io/github/stars/scverse/scanpy?logo=GitHub&color=yellow)](https://github.com/scverse/scanpy/stargazers)
+[![PyPI](https://img.shields.io/pypi/v/scanpy?logo=PyPI)](https://pypi.org/project/scanpy)
+[![Downloads](https://static.pepy.tech/badge/scanpy)](https://pepy.tech/project/scanpy)
+[![Conda](https://img.shields.io/conda/dn/conda-forge/scanpy?logo=Anaconda)](https://anaconda.org/conda-forge/scanpy)
+[![Docs](https://readthedocs.com/projects/icb-scanpy/badge/?version=latest)](https://scanpy.readthedocs.io)
+[![Build Status](https://dev.azure.com/scverse/scanpy/_apis/build/status/theislab.scanpy?branchName=master)](https://dev.azure.com/scverse/scanpy/_build)
+![Discourse topics](https://img.shields.io/discourse/posts?color=yellow&logo=discourse&server=https%3A%2F%2Fdiscourse.scverse.org)
+[![Chat](https://img.shields.io/badge/zulip-join_chat-%2367b08f.svg)](https://scverse.zulipchat.com)
+
+# Scanpy – Single-Cell Analysis in Python
+
+Scanpy is a scalable toolkit for analyzing single-cell gene expression data
+built jointly with [anndata](https://anndata.readthedocs.io).  It includes
+preprocessing, visualization, clustering, trajectory inference and differential
+expression testing.  The Python-based implementation efficiently deals with
+datasets of more than one million cells.
+
+Discuss usage on the scverse [Discourse]. Read the [documentation].
+If you'd like to contribute by opening an issue or creating a pull request, please take a look at our [contributing guide].
+If Scanpy is useful for your research, consider citing [Genome Biology (2018)].
+
+[contributing guide]: CONTRIBUTING.md
+[discourse]: https://discourse.scverse.org/
+[documentation]: https://scanpy.readthedocs.io
+[genome biology (2018)]: https://doi.org/10.1186/s13059-017-1382-0
