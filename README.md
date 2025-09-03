@@ -1,5 +1,5 @@
 # scFlowVis
-scFlowVis is an interactive visual analytics tool designed to facilitate the analysis of single-cell RNA sequencing (scRNA-seq) data. Built on top of **Scanpy** for data processing and implemented within a **Flask** backend framework, it integrates a comprehensive suite of scRNA-seq analysis methods. On the frontend, scFlowVis leverages modern visualization libraries such as **Graph.js** and **Plotly.js** to provide interactive exploration, dynamic visualization of data structures, and intuitive parameter tuning. The system enables users to navigate the complete scRNA-seq analysis pipeline within a unified interface, while also documenting the full analysis workflow.
+scFlowVis is an interactive visual analytics tool designed to facilitate the analysis of single-cell RNA sequencing (scRNA-seq) data. Built on top of **Scanpy** for data processing and implemented within a **Flask** backend framework, it integrates a comprehensive suite of scRNA-seq analysis methods. On the frontend, scFlowVis leverages modern visualization libraries such as **LiteGraph.js** and **Plotly.js** to provide interactive exploration, dynamic visualization of data structures, and intuitive parameter tuning. The system enables users to navigate the complete scRNA-seq analysis pipeline within a unified interface, while also documenting the full analysis workflow.
 
 
 # Demo
